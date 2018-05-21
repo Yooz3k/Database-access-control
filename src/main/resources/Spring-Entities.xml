@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="producerDAO" class="bsk_project.databaseaccesscontrol.dao.ProducerDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="warehouseDAO" class="bsk_project.databaseaccesscontrol.dao.WarehouseDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="partDAO" class="bsk_project.databaseaccesscontrol.dao.PartDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="supplierDAO" class="bsk_project.databaseaccesscontrol.dao.SupplierDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="supplyDAO" class="bsk_project.databaseaccesscontrol.dao.SupplyDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="warehousemanDAO" class="bsk_project.databaseaccesscontrol.dao.WarehousemanDAOImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+</beans>
