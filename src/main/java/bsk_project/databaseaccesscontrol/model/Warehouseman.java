@@ -81,4 +81,10 @@ public class Warehouseman {
 		this.supplies = supplies;
 	}*/
 
+	@Override
+	public String toString() {
+		return "Warehouseman [warehousemanId=" + warehousemanId + ", pesel=" + pesel + ", nationality=" + nationality
+				+ ", fullName=" + fullName + ", employmentDate=" + employmentDate + "]";
+	}
+
 }

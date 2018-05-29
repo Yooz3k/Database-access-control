@@ -63,4 +63,9 @@ public class Warehouse {
 	public void setWarehouseId(int warehouseId) {
 		this.warehouseId = warehouseId;
 	}
+
+	@Override
+	public String toString() {
+		return "Warehouse [warehouseId=" + warehouseId + ", capacity=" + capacity + "]";
+	}
 }

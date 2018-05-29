@@ -79,6 +79,12 @@ public class Supplier {
 		this.cooperationStartDate = cooperationStartDate;
 	}
 
+	@Override
+	public String toString() {
+		return "Supplier [supplierId=" + supplierId + ", name=" + name + ", city=" + city + ", phoneNumber="
+				+ phoneNumber + ", cooperationStartDate=" + cooperationStartDate + "]";
+	}
+
 	/*public List<Supply> getSupplies() {
 		return supplies;
 	}
@@ -86,5 +92,4 @@ public class Supplier {
 	public void setSupplies(List<Supply> supplies) {
 		this.supplies = supplies;
 	}*/
-
 }

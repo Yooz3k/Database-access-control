@@ -63,4 +63,11 @@ public class Producer {
 	public void setParts(List<Part> parts) {
 		this.parts = parts;
 	}*/
+
+	@Override
+	public String toString() {
+		return "Producer [producerId=" + producerId + ", name=" + name + ", country=" + country + "]";
+	}
+    
+    
 }

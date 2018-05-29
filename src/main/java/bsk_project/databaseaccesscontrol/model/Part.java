@@ -130,5 +130,14 @@ public class Part {
 	public void setProducerId(int id) {
 		producerId = id;
 	}
+
+	@Override
+	public String toString() {
+		return "Part [partId=" + partId + ", stockNumber=" + stockNumber + ", name=" + name + ", amount=" + amount
+				+ ", price=" + price + ", category=" + category + ", warehouseId=" + warehouseId + ", producerId="
+				+ producerId + "]";
+	}
+	
+	
 	
 }

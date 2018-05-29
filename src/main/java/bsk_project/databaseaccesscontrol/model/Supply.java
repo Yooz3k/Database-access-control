@@ -133,4 +133,13 @@ public class Supply {
 	public void setWarehouseId(int warehouseId) {
 		this.warehouseId = warehouseId;
 	}
+
+	@Override
+	public String toString() {
+		return "Supply [supplyId=" + supplyId + ", shippingNumber=" + shippingNumber + ", shippingDate=" + shippingDate
+				+ ", shippingTime=" + shippingTime + ", supplierId=" + supplierId + ", warehousemanId=" + warehousemanId
+				+ ", warehouseId=" + warehouseId + "]";
+	}
+	
+	
 }
