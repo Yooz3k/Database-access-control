@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 
 import bsk_project.databaseaccesscontrol.model.Supplier;
 
-public class SupplierDAOImpl implements SupplierDAO {
+public class SupplierDAOImpl extends BaseDAO implements SupplierDAO {
 	
     private DataSource dataSource;
     

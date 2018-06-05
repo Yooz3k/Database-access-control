@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 import bsk_project.databaseaccesscontrol.model.Supply;
 
-public class SupplyDAOImpl implements SupplyDAO {
+public class SupplyDAOImpl extends BaseDAO implements SupplyDAO {
 	
     private DataSource dataSource;
     

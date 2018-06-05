@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 
 import bsk_project.databaseaccesscontrol.model.Part;
 
-public class PartDAOImpl implements PartDAO {
+public class PartDAOImpl extends BaseDAO implements PartDAO {
 	
     private DataSource dataSource;
     

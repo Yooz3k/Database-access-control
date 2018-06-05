@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 
 import bsk_project.databaseaccesscontrol.model.Warehouseman;
 
-public class WarehousemanDAOImpl implements WarehousemanDAO {
+public class WarehousemanDAOImpl extends BaseDAO implements WarehousemanDAO {
 	
     private DataSource dataSource;
     

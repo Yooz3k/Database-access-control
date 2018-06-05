@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 
 import bsk_project.databaseaccesscontrol.model.Producer;
 
-public class ProducerDAOImpl implements ProducerDAO {
+public class ProducerDAOImpl extends BaseDAO implements ProducerDAO {
 	
     private DataSource dataSource;
     

@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 
 import bsk_project.databaseaccesscontrol.model.Warehouse;
 
-public class WarehouseDAOImpl implements WarehouseDAO {
+public class WarehouseDAOImpl extends BaseDAO implements WarehouseDAO {
 	
     private DataSource dataSource;
     

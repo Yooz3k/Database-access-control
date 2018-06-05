@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<title>Magazyn części samochodowych</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="scripts.js"></script>
+<style>
+body {font-family: "Lato", sans-serif}
+.mySlides {display: none}
+</style>
+<body>
+
+<div class="w3-top">
+  <div class="w3-bar w3-black w3-card">
+    <a href="login.html" class="w3-bar-item w3-button w3-padding-large">Logowanie</a>
+    <a href="parts.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Części</a>
+    <a href="producers.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Producenci</a>
+    <a href="supplies.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Dostawy</a>
+    <a href="suppliers.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Dostawcy</a>
+    <a href="warehouses.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Magazyny</a>
+    <a href="warehousemen.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Magazynierzy</a>
+  </div>
+</div>
+
+
+<div id="navDemo" class="w3-bar-block w3-black w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
+    <a href="login.html" class="w3-bar-item w3-button w3-padding-large">Logowanie</a>
+    <a href="parts.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Części</a>
+    <a href="producers.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Producenci</a>
+    <a href="supplies.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Dostawy</a>
+    <a href="suppliers.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Dostawcy</a>
+    <a href="warehouses.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Magazyny</a>
+    <a href="warehousemen.html" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Magazynierzy</a>
+</div>
+
+
+<div class="w3-content" style="max-width:1920px;margin-top:46px">
+  <div class="w3-container w3-content w3-padding-64" align="center" id="mainContainer">
+  	<div id="buttonRow">
+  		<button type="button" onclick="javascript:actionCreate()">Dodaj</button>
+  		<button type="button" onclick="javascript:actionUpdate()">Edytuj</button>
+  		<button type="button" onclick="javascript:actionRead()">Wyświetl</button>
+  		<button type="button" onclick="javascript:actionDelete()">Usuń</button>
+  	</div>
+  	<div id="actionContent" style="margin-top:32px">
+	  	<div id="actionCreate" style="display:none">
+	  		<form action="javascript:createPart()" method="post">
+	            Numer katalogowy: <input id="stockNumber" type="text"/></br>
+	            Nazwa: <input id="name" type="text"/></br>
+	            Stan magazynowy: <input id="amount" type="number"/></br>
+	            Cena detaliczna: <input id="price" type="number"/></br>
+	            Kategoria: <input id="category" type="text"/></br>
+	            ID magazynu: <input id="warehouseId" type="number"/></br>
+	            ID producenta: <input id="producerId" type="number"/></br>
+	            <p class="w3-center"><input type="submit" name="createPartSubmit" value="Dodaj!"/></p>
+	        </form>
+	  	</div>
+	  	<div id="actionUpdate" style="display:none">
+	  		<form action="javascript:updatePart()" method="post">
+	  			ID części: <input id="partId" type="number"/></br>
+	            Numer katalogowy: <input id="stockNumber" type="text"/></br>
+	            Nazwa: <input id="name" type="text"/></br>
+	            Stan magazynowy: <input id="amount" type="number"/></br>
+	            Cena detaliczna: <input id="price" type="number"/></br>
+	            Kategoria: <input id="category" type="text"/></br>
+	            ID magazynu: <input id="warehouseId" type="number"/></br>
+	            ID producenta: <input id="producerId" type="number"/></br>
+	            <p class="w3-center"><input type="submit" name="updatePartSubmit" value="Edytuj!"/></p>
+	        </form>
+	  	</div>
+	  	<div id="actionRead" style="display:none">
+	  		<table align="center" id="partsTable">
+                <thead>
+                    <tr>
+                    	<th>ID części</th>
+                        <th>Numer katalogowy</th>
+                        <th>Nazwa</th>
+                        <th>Stan magazynowy</th>
+                        <th>Cena detaliczna</th>
+                        <th>Kategoria</th>
+                        <th>ID magazynu</th>
+                        <th>ID producenta</th>
+                    </tr>
+                </thead>
+                <tbody id="partsTableBody"></tbody>
+            </table>
+	  	</div>
+	  	<div id="actionDelete" style="display:none">
+	  		<form action="javascript:updatePart()" method="post">
+	  			ID części: <input id="partId" type="number"/>
+	            <p class="w3-center"><input type="submit" name="deletePartSubmit" value="Usuń!"/></p>
+	        </form>
+	  	</div>
+  	</div>
+  </div>
+</div>
+    
+<footer class="w3-container w3-center w3-opacity w3-light-grey w3-xlarge">
+  <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+</body>
+</html>
