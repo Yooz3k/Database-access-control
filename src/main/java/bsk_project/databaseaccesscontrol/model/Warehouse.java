@@ -23,6 +23,10 @@ public class Warehouse {
     @OneToMany
     List<Part> parts;*/
     
+    public Warehouse() {
+    	
+    }
+    
     public Warehouse(int id, int capacity) {
     	this.setWarehouseId(id);
     	this.capacity = capacity;

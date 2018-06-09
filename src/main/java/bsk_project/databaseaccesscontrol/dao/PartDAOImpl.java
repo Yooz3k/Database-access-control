@@ -91,6 +91,8 @@ public class PartDAOImpl extends BaseDAO implements PartDAO {
 	@Override
 	public void deleteById(int id) {
 		String sql = "DELETE FROM Czesci WHERE ID = ?";
+		
+		System.out.println("Usuwane ID: " + id);
         
         Connection conn = null;
         
@@ -112,16 +114,20 @@ public class PartDAOImpl extends BaseDAO implements PartDAO {
 	}
 
 	@Override
-	public void updateById(int id, String stockNumber, String name, int amount, double price, String category) {
-		String sql = "UPDATE Czesci SET NumerKatalogowy = '" + stockNumber + "', Nazwa = '" + name +  
-			"', StanMagazynowy = '" + amount + "', CenaDetaliczna = '" + price + "', Kategoria = '" + category + "' WHERE ID = ?";
+	public void update(Part part) {
+		String sql = "UPDATE Czesci SET NumerKatalogowy = '" + part.getStockNumber() + 
+				"', Nazwa = '" + part.getName() +  
+				"', StanMagazynowy = '" + part.getAmount() + 
+				"', CenaDetaliczna = '" + part.getPrice() + 
+				"', Kategoria = '" + part.getCategory() + "' WHERE ID = ?";
         
         Connection conn = null;
         
+        //Part updatedPart = find(part.getPartId());
         try {
         	conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, part.getPartId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -133,5 +139,41 @@ public class PartDAOImpl extends BaseDAO implements PartDAO {
                 } catch (SQLException e) {}
             }
         }		
+	}
+	
+	@Override
+	public Part find(int id) {
+		String sql = "SELECT * FROM Czesci WHERE ID = ?";
+        
+        Connection conn = null;
+        
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            Part result = null;
+            ResultSet rs = ps.executeQuery();
+            result = new Part(
+            		rs.getInt("ID"),
+            		rs.getString("NumerKatalogowy"),
+            		rs.getString("Nazwa"),
+            		rs.getInt("StanMagazynowy"),
+            		rs.getDouble("CenaDetaliczna"),
+            		rs.getString("Kategoria"),
+            		rs.getInt("ID_Magazynu"),
+            		rs.getInt("ID_Producenta")
+            );
+            rs.close();
+            ps.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
 	}
 }

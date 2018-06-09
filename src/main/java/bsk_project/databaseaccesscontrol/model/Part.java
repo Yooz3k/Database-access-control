@@ -29,6 +29,10 @@ public class Part {
 	int warehouseId;
 	int producerId;
 	
+	public Part() {
+		
+	}
+	
 	public Part(String stockNumber, String name, int amount, double price, String category, int warehouseId, int producerId) {
 		this.stockNumber = stockNumber;
 		this.name = name;

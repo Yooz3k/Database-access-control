@@ -7,5 +7,6 @@ public interface PartDAO {
     public void insert(Part part);
     public List<Part> findAll();
     public void deleteById(int id);
-    public void updateById(int id, String stockNumber, String name, int amount, double price, String category);
+    public void update(Part part);
+    public Part find(int id);
 }

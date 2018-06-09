@@ -20,6 +20,10 @@ public class Producer {
     
    /* @OneToMany
     List<Part> parts;*/
+    
+    public Producer() {
+    	
+    }
 
     public Producer(String name, String country) {
         this.name = name;

@@ -24,6 +24,11 @@ public class Warehouseman {
 	/*@OneToMany
 	List<Supply> supplies;
 	*/
+	
+	public Warehouseman() {
+		
+	}
+	
 	public Warehouseman(String pesel, String nationality, String fullName,
 			Date employmentDate) {
 		this.pesel = pesel;

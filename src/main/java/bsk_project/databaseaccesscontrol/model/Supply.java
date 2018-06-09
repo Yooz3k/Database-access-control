@@ -32,6 +32,10 @@ public class Supply {
 	int supplierId;
 	int warehousemanId;
 	int warehouseId;
+	
+	public Supply() {
+		
+	}
 
 	public Supply(String shippingNumber, Date shippingDate, Time shippingTime, int supplierId,
 			int warehousemanId, int warehouseId) {

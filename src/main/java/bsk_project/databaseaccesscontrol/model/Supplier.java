@@ -24,6 +24,10 @@ public class Supplier {
 	/*@OneToMany
 	List<Supply> supplies;*/
 	
+	public Supplier() {
+		
+	}
+	
 	public Supplier(String name, String city, String phoneNumber, Date cooperationStartDate) {
 		this.name = name;
 		this.city = city;
