@@ -11,6 +11,16 @@ public class Guardian {
 		System.out.println("1 New GUARDIAN: " + login + " " + currentRole);
 	}
 	
+	public Guardian(Guardian guardian) {
+		if (guardian == null) {
+			this.currentRole = "";
+			this.login = "";
+		} else {
+			this.currentRole = guardian.getCurrentRole();
+			this.login = guardian.login;
+		}
+	}
+	
 	public Guardian(String role, String login) {
 		this.currentRole = role;
 		this.login = login;

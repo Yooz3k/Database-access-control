@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,11 +36,12 @@ import bsk_project.databaseaccesscontrol.security.Table;
 public class DatabaseAccessControlServlet {
 	
 	@Context
-	ServletContext ctx;
+	private ServletContext ctx;
 	
-	@Singleton
-	private Guardian guardian;
+	@Context
+	private HttpServletRequest request;
 	
+	private Guardian guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
 	private EntityContainer ec = new EntityContainer();
 	private RoleContainer rc = new RoleContainer();
 	
@@ -80,12 +83,14 @@ public class DatabaseAccessControlServlet {
             		roleValue = (int)obj.getInt(roleInput);
             		if (roleValue == 1) {
             			guardian = new Guardian(roleInput, login);
+            			request.setAttribute("guardian", guardian);
             			return 1;
             		}
             	}
             }
     	}
-    	guardian = new Guardian();
+    	//guardian = new Guardian();
+    	request.setAttribute("guardian", guardian);
 	    return 0;
 	}
 	
