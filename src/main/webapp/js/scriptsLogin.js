@@ -1,10 +1,12 @@
 function login() {
 	var login = document.getElementById("login").value;
 	var password = document.getElementById("password").value;
+	var role = $('#selectedRole').val();
 	
 	var jsonObj = {
 			"login":login,
-			"password":password
+			"password":password,
+			"role":selectedRole
 	};
 	
 	$.ajax({

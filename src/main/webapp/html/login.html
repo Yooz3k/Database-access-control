@@ -44,6 +44,12 @@ body {font-family: "Lato", sans-serif}
   		<form action="javascript:login()" method="post">
 	        Login: <input id="login" type="text" required/></br>
 	        Hasło: <input id="password" type="password" required/></br>
+	        <select id="selectedRole">
+                <option value="warehousemanRole">Magazynier</option>
+                <option value="logisticianRole">Logistyk</option>
+                <option value="hrEmployeeRole">Pracownik HR</option>
+                <option value="managerRole">Kierownik</option>
+            </select>
 	        <p class="w3-center"><input type="submit" name="loginSubmit" value="Zaloguj"/></p>
 	    </form>
   	</div>

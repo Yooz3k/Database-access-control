@@ -1,14 +1,21 @@
 package bsk_project.databaseaccesscontrol.common;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
+import javax.inject.Singleton;
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import bsk_project.databaseaccesscontrol.model.Part;
@@ -26,18 +33,60 @@ import bsk_project.databaseaccesscontrol.security.Table;
 @Path("/")
 public class DatabaseAccessControlServlet {
 	
+	@Context
+	ServletContext ctx;
+	
+	@Singleton
+	private Guardian guardian;
+	
 	private EntityContainer ec = new EntityContainer();
-	private Guardian guardian = new Guardian("warehouseman");
 	private RoleContainer rc = new RoleContainer();
 	
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void login(String json) {
-		//otworz plik
-		//zamien haslo na hash
-		//znajdz uzytkownika
-		//porownaj jego haslo z hashem
+	public int login(String json) {
+		JSONObject jo = new JSONObject(json);
+		
+		String loginInput = (String)jo.get("login");
+		String passwordInput = (String)jo.get("password");
+		String roleInput = "warehousemanRole";	//(String)jo.get("role");
+		
+		String filePath = ctx.getRealPath("/") + "users.json";
+		
+		String content = null;
+		try {
+			content = new String(Files.readAllBytes(Paths.get(filePath)));
+			content = content.replace("\\", "");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//String fileCont="[{\"login\":\"user\",\"password\":\"123\",\"warehousemanRole\":1,\"logisticianRole\":0,\"hrEmployeeRole\":0,\"managerRole\":0},{\"login\":\"manager\",\"password\":\"234\",\"warehousemanRole\":0,\"logisticianRole\":0,\"hrEmployeeRole\":0,\"managerRole\":1}]";
+		
+		JSONArray ja = new JSONArray(content);
+		String login;
+    	String password;
+    	int roleValue;
+    	
+    	for (int i = 0; i < ja.length(); i++) {
+    		JSONObject obj = ja.getJSONObject(i);
+    		
+    		login = (String)obj.get("login");
+            if (login.equals(loginInput)) {
+            	password = (String)obj.get("password");
+            	if (password.equals(passwordInput)) { 
+            		roleValue = (int)obj.getInt(roleInput);
+            		if (roleValue == 1) {
+            			guardian = new Guardian(roleInput, login);
+            			return 1;
+            		}
+            	}
+            }
+    	}
+    	guardian = new Guardian();
+	    return 0;
 	}
 	
 	@GET
