@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,20 +40,20 @@ public class DatabaseAccessControlServlet {
 	
 	@Context
 	private HttpServletRequest request;
-	
-	private Guardian guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+
+	private Guardian guardian;
 	private EntityContainer ec = new EntityContainer();
 	private RoleContainer rc = new RoleContainer();
 	
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public int login(String json) {
+	public Response login(String json) {
 		JSONObject jo = new JSONObject(json);
 		
 		String loginInput = (String)jo.get("login");
 		String passwordInput = (String)jo.get("password");
-		String roleInput = "warehousemanRole";	//(String)jo.get("role");
+		String roleInput = "warehouseman";	//(String)jo.get("role");
 		
 		String filePath = ctx.getRealPath("/") + "users.json";
 		
@@ -65,8 +65,6 @@ public class DatabaseAccessControlServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//String fileCont="[{\"login\":\"user\",\"password\":\"123\",\"warehousemanRole\":1,\"logisticianRole\":0,\"hrEmployeeRole\":0,\"managerRole\":0},{\"login\":\"manager\",\"password\":\"234\",\"warehousemanRole\":0,\"logisticianRole\":0,\"hrEmployeeRole\":0,\"managerRole\":1}]";
 		
 		JSONArray ja = new JSONArray(content);
 		String login;
@@ -83,31 +81,33 @@ public class DatabaseAccessControlServlet {
             		roleValue = (int)obj.getInt(roleInput);
             		if (roleValue == 1) {
             			guardian = new Guardian(roleInput, login);
-            			request.setAttribute("guardian", guardian);
-            			return 1;
+            			request.getSession().setAttribute("guardian", guardian);
+            			return Response.status(Response.Status.NO_CONTENT).build();
             		}
             	}
             }
     	}
-    	//guardian = new Guardian();
-    	request.setAttribute("guardian", guardian);
-	    return 0;
+    	guardian = new Guardian();
+    	request.getSession().setAttribute("guardian", guardian);
+    	return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@GET
 	@Path("/parts/get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Part> findAllParts() {
+	public Response findAllParts() {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
 		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.READ, Table.PARTS)))
-			return ec.getPartDAO().findAll();
+			return Response.status(Response.Status.OK).entity(ec.getPartDAO().findAll()).build();
 		else
-			return null;
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@POST
 	@Path("/parts/add")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void addPart(String json) {
+	public Response addPart(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
 		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.CREATE, Table.PARTS))) {
 			JSONObject jo = new JSONObject(json);
 			
@@ -120,16 +120,19 @@ public class DatabaseAccessControlServlet {
 			part.setWarehouseId(jo.getInt("warehouseId"));
 			part.setProducerId(jo.getInt("producerId"));
 			ec.getPartDAO().insert(part);
-		}
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@POST
 	@Path("/parts/edit")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void updatePart(String json) {
+	public Response updatePart(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
 		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.UPDATE, Table.PARTS))) {
 			JSONObject jo = new JSONObject(json);
-			System.out.println(json);
 			
 			Part part = new Part();
 			part.setPartId(jo.getInt("id"));
@@ -139,17 +142,24 @@ public class DatabaseAccessControlServlet {
 			part.setPrice(jo.getDouble("price"));
 			part.setCategory((String)jo.getString("category"));
 			ec.getPartDAO().update(part);
-		}
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@POST
 	@Path("/parts/delete")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void deletePart(String json) {
+	public Response deletePart(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
 		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.DELETE, Table.PARTS))) {
 			JSONObject jo = new JSONObject(json);
 			ec.getPartDAO().deleteById(jo.getInt("partId"));
-		}
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@GET

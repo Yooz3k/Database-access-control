@@ -1,1 +1,1 @@
-[{"login":"user","password":"123","warehousemanRole":1,"logisticianRole":0,"hrEmployeeRole":0,"managerRole":0},{"login":"manager","password":"234","warehousemanRole":0,"logisticianRole":0,"hrEmployeeRole":0,"managerRole":1}]
+[{"login":"user","password":"123","warehouseman":1,"logistician":0,"hrEmployee":0,"manager":0},{"login":"manager","password":"234","warehouseman":0,"logistician":0,"hrEmployee":0,"manager":1}]
