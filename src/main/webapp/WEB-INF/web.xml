@@ -21,8 +21,19 @@
             <param-value>false</param-value>
         </init-param>
     </servlet>
+      
     <servlet-mapping>
         <servlet-name>ServletContainer</servlet-name>
         <url-pattern>/services/*</url-pattern>
     </servlet-mapping>
+    
+    <security-constraint>
+		<web-resource-collection>
+			<web-resource-name>ServletContainer</web-resource-name>
+			<url-pattern>/services/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
 </web-app>
