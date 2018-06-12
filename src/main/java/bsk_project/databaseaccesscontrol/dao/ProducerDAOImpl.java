@@ -42,40 +42,7 @@ public class ProducerDAOImpl extends BaseDAO implements ProducerDAO {
             }
         }
     }
-    /*
-    @Override
-    public Producer findById(int id) {
-        String sql = "SELECT * FROM Producenci WHERE id = ?";
-        
-        Connection conn = null;
-        
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            Producer producer = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                producer = new Producer(
-                rs.getInt("ID"),
-                rs.getString("Nazwa"),
-                rs.getString("Kraj")
-                );
-            }
-            rs.close();
-            ps.close();
-            return producer;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {}
-            }
-        }
-    }
-    */
+    
     @Override
     public List<Producer> findAll() {
         String sql = "SELECT * FROM Producenci";
@@ -134,16 +101,16 @@ public class ProducerDAOImpl extends BaseDAO implements ProducerDAO {
 	}
 
 	@Override
-	public void updateById(int id, String name, String country) {
-		String sql = "UPDATE Producenci SET Nazwa = '" + name + 
-					"', Kraj = '" + country + "' WHERE ID = ?";
+	public void update(Producer producer) {
+		String sql = "UPDATE Producenci SET Nazwa = '" + producer.getName() + 
+					"', Kraj = '" + producer.getCountry() + "' WHERE ID = ?";
         
         Connection conn = null;
         
         try {
         	conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, producer.getProducerId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -155,5 +122,36 @@ public class ProducerDAOImpl extends BaseDAO implements ProducerDAO {
                 } catch (SQLException e) {}
             }
         }		
+	}
+	
+	@Override
+	public Producer find(int id) {
+		String sql = "SELECT * FROM Producenci WHERE ID = ?";
+        
+        Connection conn = null;
+        
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            Producer result = null;
+            ResultSet rs = ps.executeQuery();
+            result = new Producer(
+                rs.getInt("ID"),
+                rs.getString("Nazwa"),
+                rs.getString("Kraj")
+            );
+            rs.close();
+            ps.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
 	}
 }

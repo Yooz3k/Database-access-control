@@ -41,40 +41,7 @@ public class WarehouseDAOImpl extends BaseDAO implements WarehouseDAO {
             }
         }
     }
-    /*
-    @Override
-    public Producer findById(int id) {
-        String sql = "SELECT * FROM Producenci WHERE id = ?";
-        
-        Connection conn = null;
-        
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            Producer producer = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                producer = new Producer(
-                rs.getInt("ID"),
-                rs.getString("Nazwa"),
-                rs.getString("Kraj")
-                );
-            }
-            rs.close();
-            ps.close();
-            return producer;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {}
-            }
-        }
-    }
-    */
+
     @Override
     public List<Warehouse> findAll() {
         String sql = "SELECT * FROM Magazyny";
@@ -132,15 +99,15 @@ public class WarehouseDAOImpl extends BaseDAO implements WarehouseDAO {
 	}
 
 	@Override
-	public void updateById(int id, int capacity) {
-		String sql = "UPDATE Magazyny SET Wielkosc = " + capacity + " WHERE ID = ?";
+	public void update(Warehouse warehouse) {
+		String sql = "UPDATE Magazyny SET Wielkosc = " + warehouse.getCapacity() + " WHERE ID = ?";
         
         Connection conn = null;
         
         try {
         	conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, warehouse.getWarehouseId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -152,5 +119,35 @@ public class WarehouseDAOImpl extends BaseDAO implements WarehouseDAO {
                 } catch (SQLException e) {}
             }
         }		
+	}
+	
+	@Override
+	public Warehouse find(int id) {
+		String sql = "SELECT * FROM Magazyny WHERE ID = ?";
+        
+        Connection conn = null;
+        
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            Warehouse result = null;
+            ResultSet rs = ps.executeQuery();
+            result = new Warehouse(
+            		rs.getInt("ID"),
+                    rs.getInt("Wielkosc")
+            );
+            rs.close();
+            ps.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
 	}
 }

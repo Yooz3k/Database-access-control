@@ -9,12 +9,6 @@ import bsk_project.databaseaccesscontrol.dao.SupplierDAO;
 import bsk_project.databaseaccesscontrol.dao.SupplyDAO;
 import bsk_project.databaseaccesscontrol.dao.WarehouseDAO;
 import bsk_project.databaseaccesscontrol.dao.WarehousemanDAO;
-import bsk_project.databaseaccesscontrol.model.Part;
-import bsk_project.databaseaccesscontrol.model.Producer;
-import bsk_project.databaseaccesscontrol.model.Supplier;
-import bsk_project.databaseaccesscontrol.model.Supply;
-import bsk_project.databaseaccesscontrol.model.Warehouse;
-import bsk_project.databaseaccesscontrol.model.Warehouseman;
 
 public class EntityContainer {
 	ApplicationContext context;
@@ -25,14 +19,6 @@ public class EntityContainer {
 	private SupplyDAO supplyDAO;
 	private WarehouseDAO warehouseDAO;
 	private WarehousemanDAO warehousemanDAO;
-	
-	private Part part;
-	private Producer producer;
-	private Supplier supplier;
-	private Supply supply;
-	private Warehouse warehouse;
-	private Warehouseman warehouseman;
-	
 	
 	public EntityContainer() {
 		context = new ClassPathXmlApplicationContext("Spring-Module.xml");

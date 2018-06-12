@@ -1,7 +1,6 @@
 package bsk_project.databaseaccesscontrol.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,40 +44,7 @@ public class SupplierDAOImpl extends BaseDAO implements SupplierDAO {
             }
         }
     }
-    /*
-    @Override
-    public Producer findById(int id) {
-        String sql = "SELECT * FROM Producenci WHERE id = ?";
-        
-        Connection conn = null;
-        
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            Producer producer = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                producer = new Producer(
-                rs.getInt("ID"),
-                rs.getString("Nazwa"),
-                rs.getString("Kraj")
-                );
-            }
-            rs.close();
-            ps.close();
-            return producer;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {}
-            }
-        }
-    }
-    */
+
     @Override
     public List<Supplier> findAll() {
         String sql = "SELECT * FROM Dostawcy";
@@ -139,16 +105,18 @@ public class SupplierDAOImpl extends BaseDAO implements SupplierDAO {
 	}
 
 	@Override
-	public void updateById(int id, String name, String city, String phoneNumber, Date cooperationStartDate) {
-		String sql = "UPDATE Dostawcy SET Nazwa = '" + name + "', Miasto = '" + city +  "', Telefon = '" + 
-				phoneNumber + "', DataRozpoczeciaWspolpracy = '" + cooperationStartDate + "' WHERE ID = ?";
+	public void update(Supplier supplier) {
+		String sql = "UPDATE Dostawcy SET Nazwa = '" + supplier.getName() +
+				"', Miasto = '" + supplier.getCity() +  "', Telefon = '" + 
+				supplier.getPhoneNumber() + "', DataRozpoczeciaWspolpracy = '" +
+				supplier.getCooperationStartDate() + "' WHERE ID = ?";
         
         Connection conn = null;
         
         try {
         	conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, supplier.getSupplierId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -160,5 +128,38 @@ public class SupplierDAOImpl extends BaseDAO implements SupplierDAO {
                 } catch (SQLException e) {}
             }
         }		
+	}
+	
+	@Override
+	public Supplier find(int id) {
+		String sql = "SELECT * FROM Dostawcy WHERE ID = ?";
+        
+        Connection conn = null;
+        
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            Supplier result = null;
+            ResultSet rs = ps.executeQuery();
+            result = new Supplier(
+            		 rs.getInt("ID"),
+                     rs.getString("Nazwa"),
+                     rs.getString("Miasto"),
+                     rs.getString("Telefon"),
+                     rs.getDate("DataRozpoczeciaWspolpracy")
+            );
+            rs.close();
+            ps.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
 	}
 }

@@ -1,11 +1,9 @@
 package bsk_project.databaseaccesscontrol.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,18 +110,21 @@ public class SupplyDAOImpl extends BaseDAO implements SupplyDAO {
 	}
 
 	@Override
-	public void updateById(int id, String shippingNumber, Date shippingDate, Time shippingTime, int supplierId,
-			int warehousemanId, int warehouseId) {
-		String sql = "UPDATE Dostawy SET NumerPrzewozowy = '" + shippingNumber + "', DataOdbioru = '" + shippingDate +  
-			"', GodzinaOdbioru = '" + shippingTime + "', ID_Dostawcy = '" + supplierId + "', ID_Magazyniera = '" + warehousemanId + 
-			"', ID_Magazynu = '" + warehouseId + "' WHERE ID = ?";
+	public void update(Supply supply) {
+		String sql = "UPDATE Dostawy SET NumerPrzewozowy = '" +
+				supply.getShippingNumber() + "', DataOdbioru = '" +
+				supply.getShippingDate() +  "', GodzinaOdbioru = '" +
+				supply.getShippingTime() + "', ID_Dostawcy = '" +
+				supply.getSupplierId() + "', ID_Magazyniera = '" +
+				supply.getWarehousemanId() + "', ID_Magazynu = '" +
+				supply.getWarehouseId() + "' WHERE ID = ?";
         
         Connection conn = null;
         
         try {
         	conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, supply.getSupplyId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -135,5 +136,40 @@ public class SupplyDAOImpl extends BaseDAO implements SupplyDAO {
                 } catch (SQLException e) {}
             }
         }		
+	}
+	
+	@Override
+	public Supply find(int id) {
+		String sql = "SELECT * FROM Dostawy WHERE ID = ?";
+        
+        Connection conn = null;
+        
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            Supply result = null;
+            ResultSet rs = ps.executeQuery();
+            result = new Supply(
+            		rs.getInt("ID"),
+                    rs.getString("NumerPrzewozowy"),
+                    rs.getDate("DataOdbioru"),
+                    rs.getTime("GodzinaOdbioru"),
+                    rs.getInt("ID_Dostawcy"),
+                    rs.getInt("ID_Magazyniera"),
+                    rs.getInt("ID_Magazynu")
+            );
+            rs.close();
+            ps.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
 	}
 }

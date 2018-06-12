@@ -91,8 +91,6 @@ public class PartDAOImpl extends BaseDAO implements PartDAO {
 	@Override
 	public void deleteById(int id) {
 		String sql = "DELETE FROM Czesci WHERE ID = ?";
-		
-		System.out.println("Usuwane ID: " + id);
         
         Connection conn = null;
         
@@ -123,7 +121,6 @@ public class PartDAOImpl extends BaseDAO implements PartDAO {
         
         Connection conn = null;
         
-        //Part updatedPart = find(part.getPartId());
         try {
         	conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);

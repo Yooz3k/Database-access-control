@@ -6,7 +6,7 @@ function login() {
 	var jsonObj = {
 			"login":login,
 			"password":password,
-			"role":selectedRole
+			"role":role
 	};
 	
 	$.ajax({

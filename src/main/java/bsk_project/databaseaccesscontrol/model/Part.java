@@ -1,38 +1,30 @@
 package bsk_project.databaseaccesscontrol.model;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Part {
-	
+
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int partId;
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	int partId;
+
 	String stockNumber;
 	String name;
 	int amount;
 	double price;
 	String category;
-	
-	/*@ManyToOne(fetch = FetchType.LAZY)
-	Warehouse warehouse;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	Producer producer;*/
-	
+
 	int warehouseId;
 	int producerId;
-	
+
 	public Part() {
-		
+
 	}
-	
+
 	public Part(String stockNumber, String name, int amount, double price, String category, int warehouseId, int producerId) {
 		this.stockNumber = stockNumber;
 		this.name = name;
@@ -101,36 +93,19 @@ public class Part {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-/*
-	public Warehouse getWarehouse() {
-		return warehouse;
-	}
 
-	public void setWarehouse(Warehouse warehouse) {
-		this.warehouse = warehouse;
-	}
-
-	public Producer getProducer() {
-		return producer;
-	}
-
-	public void setProducer(Producer producer) {
-		this.producer = producer;
-	}
-	*/
-	
 	public int getWarehouseId() {
 		return warehouseId;
 	}
-	
+
 	public void setWarehouseId(int id) {
 		warehouseId = id;
 	}
-	
+
 	public int getProducerId() {
 		return producerId;
 	}
-	
+
 	public void setProducerId(int id) {
 		producerId = id;
 	}
@@ -141,7 +116,4 @@ public class Part {
 				+ ", price=" + price + ", category=" + category + ", warehouseId=" + warehouseId + ", producerId="
 				+ producerId + "]";
 	}
-	
-	
-	
 }

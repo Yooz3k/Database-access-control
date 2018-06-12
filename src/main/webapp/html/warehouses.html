@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="scripts.js"></script>
+<script src="../js/scriptsWarehouses.js"></script>
 <style>
 body {font-family: "Lato", sans-serif}
 .mySlides {display: none}
@@ -39,9 +39,45 @@ body {font-family: "Lato", sans-serif}
 
 
 <div class="w3-content" style="max-width:1920px;margin-top:46px">
-
-  <div class="w3-black" align="center" id="localization">
-  
+  <div class="w3-container w3-content w3-padding-64" align="center" id="mainContainer">
+  	<div id="buttonRow">
+  		<button type="button" onclick="javascript:actionCreate()">Dodaj</button>
+  		<button type="button" onclick="javascript:actionUpdate()">Edytuj</button>
+  		<button type="button" onclick="javascript:actionRead()">Wyświetl</button>
+  		<button type="button" onclick="javascript:actionDelete()">Usuń</button>
+  	</div>
+  	<div id="actionContent" style="margin-top:32px">
+	  	<div id="actionCreate" style="display:none">
+	  		<form action="javascript:createWarehouse()" method="post">
+	            Pojemność: <input id="capacityCreate" type="number"/></br>
+	            <p class="w3-center"><input type="submit" name="createWarehouseSubmit" value="Dodaj!"/></p>
+	        </form>
+	  	</div>
+	  	<div id="actionUpdate" style="display:none">
+	  		<form action="javascript:updateWarehouse()" method="post">
+	  			ID magazynu: <input id="warehouseIdUpdate" type="number"/></br>
+	            Pojemność: <input id="capacityUpdate" type="number"/></br>
+	            <p class="w3-center"><input type="submit" name="updateWarehouseSubmit" value="Edytuj!"/></p>
+	        </form>
+	  	</div>
+	  	<div id="actionRead" style="display:none">
+	  		<table align="center" id="warehousesTable">
+                <thead>
+                    <tr>
+                    	<th>ID magazynu</th>
+                        <th>Pojemność</th>
+                    </tr>
+                </thead>
+                <tbody id="warehousesTableBody"></tbody>
+            </table>
+	  	</div>
+	  	<div id="actionDelete" style="display:none">
+	  		<form action="javascript:deleteWarehouse()" method="post">
+	  			ID magazynu: <input id="warehouseIdDelete" type="number"/>
+	            <p class="w3-center"><input type="submit" name="deleteWarehouseSubmit" value="Usuń!"/></p>
+	        </form>
+	  	</div>
+  	</div>
   </div>
 </div>
     

@@ -1,7 +1,8 @@
 package bsk_project.databaseaccesscontrol.dao;
 
-import bsk_project.databaseaccesscontrol.model.Part;
 import java.util.List;
+
+import bsk_project.databaseaccesscontrol.model.Part;
 
 public interface PartDAO {
     public void insert(Part part);

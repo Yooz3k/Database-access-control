@@ -3,11 +3,11 @@ package bsk_project.databaseaccesscontrol.common;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.sql.Date;
+import java.sql.Time;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -53,7 +53,7 @@ public class DatabaseAccessControlServlet {
 		
 		String loginInput = (String)jo.get("login");
 		String passwordInput = (String)jo.get("password");
-		String roleInput = "warehouseman";	//(String)jo.get("role");
+		String roleInput = (String)jo.get("role");
 		
 		String filePath = ctx.getRealPath("/") + "users.json";
 		
@@ -165,37 +165,334 @@ public class DatabaseAccessControlServlet {
 	@GET
 	@Path("/producers/get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Producer> findAllProducers() {
-		return ec.getProducerDAO().findAll();
+	public Response findAllProducers() {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.READ, Table.PRODUCERS)))
+			return Response.status(Response.Status.OK).entity(ec.getProducerDAO().findAll()).build();
+		else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/producers/add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addProducer(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.CREATE, Table.PRODUCERS))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Producer producer = new Producer();
+			producer.setName((String)jo.get("name"));
+			producer.setCountry((String)jo.get("country"));
+			
+			ec.getProducerDAO().insert(producer);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/producers/edit")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateProducer(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.UPDATE, Table.PRODUCERS))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Producer producer = new Producer();
+			producer.setProducerId(jo.getInt("id"));
+			producer.setName((String)jo.get("name"));
+			producer.setCountry((String)jo.get("country"));
+			
+			ec.getProducerDAO().update(producer);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/producers/delete")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteProducer(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.DELETE, Table.PRODUCERS))) {
+			JSONObject jo = new JSONObject(json);
+			ec.getProducerDAO().deleteById(jo.getInt("producerId"));
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@GET
 	@Path("/suppliers/get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Supplier> findAllSuppliers() {
-		return ec.getSupplierDAO().findAll();
+	public Response findAllSuppliers() {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.READ, Table.SUPPLIERS)))
+			return Response.status(Response.Status.OK).entity(ec.getSupplierDAO().findAll()).build();
+		else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/suppliers/add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addSupplier(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.CREATE, Table.SUPPLIERS))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Supplier supplier = new Supplier();
+			supplier.setName((String)jo.get("name"));
+			supplier.setCity((String)jo.get("city"));
+			supplier.setPhoneNumber((String)jo.get("phoneNumber"));
+			supplier.setCooperationStartDate((Date)jo.get("cooperationStartDate"));
+
+			ec.getSupplierDAO().insert(supplier);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/suppliers/edit")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateSupplier(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.UPDATE, Table.SUPPLIERS))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Supplier supplier = new Supplier();
+			supplier.setSupplierId(jo.getInt("id"));
+			supplier.setName((String)jo.get("name"));
+			supplier.setCity((String)jo.get("city"));
+			supplier.setPhoneNumber((String)jo.get("phoneNumber"));
+			supplier.setCooperationStartDate((Date)jo.get("cooperationStartDate"));
+
+			ec.getSupplierDAO().update(supplier);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/suppliers/delete")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteSupplier(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.DELETE, Table.SUPPLIERS))) {
+			JSONObject jo = new JSONObject(json);
+			ec.getSupplierDAO().deleteById(jo.getInt("supplierID"));
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@GET
 	@Path("/supplies/get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Supply> findAllSupplies() {
-		return ec.getSupplyDAO().findAll();
+	public Response findAllSupplies() {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.READ, Table.SUPPLIES)))
+			return Response.status(Response.Status.OK).entity(ec.getSupplyDAO().findAll()).build();
+		else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/supplies/add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addSupply(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.CREATE, Table.SUPPLIES))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Supply supply = new Supply();
+			supply.setShippingNumber((String)jo.get("shippingNumber"));
+			supply.setShippingDate((Date)jo.get("shippingDate"));
+			supply.setShippingTime((Time)jo.get("shippingTime"));
+			supply.setSupplierId(jo.getInt("supplierId"));
+			supply.setWarehousemanId(jo.getInt("warehousemanId"));
+			supply.setWarehouseId(jo.getInt("warehouseId"));
+			
+			ec.getSupplyDAO().insert(supply);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/supplies/edit")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateSupply(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.UPDATE, Table.SUPPLIES))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Supply supply = new Supply();
+			supply.setSupplyId(jo.getInt("id"));
+			supply.setShippingNumber((String)jo.get("shippingNumber"));
+			supply.setShippingDate((Date)jo.get("shippingDate"));
+			supply.setShippingTime((Time)jo.get("shippingTime"));
+			supply.setSupplierId(jo.getInt("supplierId"));
+			supply.setWarehousemanId(jo.getInt("warehousemanId"));
+			supply.setWarehouseId(jo.getInt("warehouseId"));
+			
+			ec.getSupplyDAO().update(supply);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/supplies/delete")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteSupply(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.DELETE, Table.SUPPLIES))) {
+			JSONObject jo = new JSONObject(json);
+			ec.getSupplyDAO().deleteById(jo.getInt("supplyId"));
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@GET
 	@Path("/warehousemen/get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Warehouseman> findAllWarehousemen() {
-		return ec.getWarehousemanDAO().findAll();
+	public Response findAllWarehousemen() {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.READ, Table.WAREHOUSEMEN)))
+			return Response.status(Response.Status.OK).entity(ec.getWarehousemanDAO().findAll()).build();
+		else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/warehousemen/add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addWarehouseman(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.CREATE, Table.WAREHOUSEMEN))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Warehouseman warehouseman = new Warehouseman();
+			warehouseman.setPesel((String)jo.get("pesel"));
+			warehouseman.setNationality((String)jo.get("nationality"));
+			warehouseman.setFullName((String)jo.get("fullName"));
+			warehouseman.setEmploymentDate((Date)jo.get("employmentDate"));
+			
+			ec.getWarehousemanDAO().insert(warehouseman);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/warehousemen/edit")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateWarehouseman(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.UPDATE, Table.WAREHOUSEMEN))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Warehouseman warehouseman = new Warehouseman();
+			warehouseman.setWarehousemanId(jo.getInt("id"));
+			warehouseman.setPesel((String)jo.get("pesel"));
+			warehouseman.setNationality((String)jo.get("nationality"));
+			warehouseman.setFullName((String)jo.get("fullName"));
+			warehouseman.setEmploymentDate((Date)jo.get("employmentDate"));
+			
+			ec.getWarehousemanDAO().update(warehouseman);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/warehousemen/delete")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteWarehouseman(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.DELETE, Table.WAREHOUSEMEN))) {
+			JSONObject jo = new JSONObject(json);
+			ec.getWarehousemanDAO().deleteById(jo.getInt("warehousemanId"));
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
 	@GET
 	@Path("/warehouses/get")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Warehouse> findAllWarehouses() {
-		return ec.getWarehouseDAO().findAll();
+	public Response findAllWarehouses() {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.READ, Table.WAREHOUSES)))
+			return Response.status(Response.Status.OK).entity(ec.getWarehouseDAO().findAll()).build();
+		else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
 	}
 	
+	@POST
+	@Path("/warehouses/add")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addWarehouse(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.CREATE, Table.WAREHOUSES))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Warehouse warehouse = new Warehouse();
+			warehouse.setCapacity(jo.getInt("capacity"));
+			
+			ec.getWarehouseDAO().insert(warehouse);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
 	
+	@POST
+	@Path("/warehouses/edit")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateWarehouse(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.UPDATE, Table.WAREHOUSES))) {
+			JSONObject jo = new JSONObject(json);
+			
+			Warehouse warehouse = new Warehouse();
+			warehouse.setWarehouseId(jo.getInt("id"));
+			warehouse.setCapacity(jo.getInt("capacity"));
+			
+			ec.getWarehouseDAO().update(warehouse);
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
+	
+	@POST
+	@Path("/warehouses/delete")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteWarehouse(String json) {
+		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
+		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.DELETE, Table.WAREHOUSES))) {
+			JSONObject jo = new JSONObject(json);
+			ec.getWarehouseDAO().deleteById(jo.getInt("warehouseId"));
+			
+			return Response.status(Response.Status.CREATED).build();
+		} else
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+	}
 }

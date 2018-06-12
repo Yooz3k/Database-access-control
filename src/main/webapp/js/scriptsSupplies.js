@@ -17,6 +17,8 @@ function actionRead() {
 	document.getElementById("actionCreate").style.display = "none";
 	document.getElementById("actionUpdate").style.display = "none";
 	document.getElementById("actionDelete").style.display = "none";
+	
+	getSupplies();
 }
 
 function actionDelete() {
@@ -26,80 +28,105 @@ function actionDelete() {
 	document.getElementById("actionRead").style.display = "none";
 }
 
-function showWeather() {/*
-    var listsToSkip = document.getElementById("forecastInput").value * 8;       //There are 8 forecasts per day
-    if (listsToSkip == 40)      //Only 39 forecasts will be returned
-        listsToSkip -= 1;
-
-    document.getElementById("forecastData").style.display = "inline";
-    $.getJSON("http://api.openweathermap.org/data/2.5/forecast?lat=54.38&lon=18.47&units=metric&lang=pl&APPID=2508abecb6d9037229e719a6adc445af", function (weatherCond) {
-        document.getElementById("forecastDateTime").textContent = "Data: " + weatherCond.list[listsToSkip].dt_txt;
-        document.getElementById("weatherImg").src = "http://openweathermap.org/img/w/" + weatherCond.list[listsToSkip].weather[0].icon + ".png";
-        document.getElementById("temperature").textContent = "Temperatura: " + weatherCond.list[listsToSkip].main.temp + " °C";
-        document.getElementById("weatherDesc").textContent = "Warunki: " + weatherCond.list[listsToSkip].weather[0].description;
-        document.getElementById("pressure").textContent = "Ciśnienie: " + weatherCond.list[listsToSkip].main.pressure + " hPa";
-        document.getElementById("humidity").textContent = "Wilgotność: " + weatherCond.list[listsToSkip].main.humidity + "%";
-        document.getElementById("windSpeed").textContent = "Prędkość wiatru: " + weatherCond.list[listsToSkip].wind.speed + " m/s";
-    });*/
-}
-    
-function showDistance() {/*
-    var originCity = document.getElementById("originCity").value;
-    var destinationCity = document.getElementById("destinationCity").value;
-    var travelMode = document.getElementById("travelMode").value;
-
-    $.getJSON("airport/services/distance", {"originCity": originCity, "destinationCity": destinationCity, "travelMode": travelMode}, function(result) {
-        document.getElementById("distanceInfo").style.display = "inline";
-        
-        if (result.rows[0].elements[0].distance === null) {
-           document.getElementById("travelCities").textContent = "Brak danych dla wybranych lokalizacji!";
-        }
-        else {
-            document.getElementById("travelDistance").textContent = "Odległość: " + result.rows[0].elements[0].distance.humanReadable;
-            document.getElementById("travelTime").textContent = "Przewidywany czas: " + result.rows[0].elements[0].duration.humanReadable;
-            document.getElementById("travelCities").textContent = result.originAddresses[0] + " ---> " + result.destinationAddresses[0];
-        }
-    });*/
-}
-    
-function showFlights() {/*
-    var flightsCity = document.getElementById("flightsCity").value;
-    var flightsType;
-    var flightsRadios = document.getElementsByName("flightsTypes");
-    for (var i = 0, length = flightsRadios.length; i < length; i++) {
-        if (flightsRadios[i].checked) {
-            flightsType = flightsRadios[i].value;
-        }
-    }
-        
-    $.getJSON("airport/services/flights", {"searchedAirport": flightsCity, "flightType": flightsType}, function(result) {
-        document.getElementById("flightsInfo").style.display = "inline";
+function getSupplies() {
+	$.getJSON("/DatabaseAccessControl/services/supplies/get", function(result) {
+		$("#suppliesTable tbody tr").remove();       //Clear all but header rows of the table
+        $.each(result, function(i, supply) {
+            var row = $("<tr>");
             
-        if (result.length == 0) {       //Result is null
-            document.getElementById("flightsTypeAndCity").textContent = "Nie znaleziono żadnych lotów!";
-            document.getElementById("flightsTable").style.display = "none";
-        }
-        else {                          //Result is not null      
-            document.getElementById("flightsTable").style.display = "table";
-                
-            if (flightsType == "arrivals") { 
-                document.getElementById("flightsTypeAndCity").textContent = "Przyloty z lotniska " + flightsCity + ":";
-            }
-            else if (flightsType == "departures") {
-                document.getElementById("flightsTypeAndCity").textContent = "Odloty do lotniska " + flightsCity + ":";
-            }
+            var idCell = document.createElement("td");
+            var shippingNumberCell = document.createElement("td");
+            var shippingDateCell = document.createElement("td");
+            var shippingTimeCell = document.createElement("td");
+            var supplierIdCell = document.createElement("td");
+            var warehousemanIdCell = document.createElement("td");
+            var warehouseIdCell = document.createElement("td");
+            idCell.innerHTML = supply.supplyId;
+            shippingNumberCell.innerHTML = supply.shippingNumber;
+            shippingDateCell.innerHTML = supply.shippingDate;
+            shippingTimeCell.innerHTML = supply.shippingTime;
+            supplierIdCell.innerHTML = supply.supplierId;
+            warehousemanIdCell.innerHTML = supply.warehousemanId;
+            warehouseIdCell.innerHTML = supply.warehouseId;
 
-            var table = document.getElementById("flightsTableBody");
-            $("#flightsTable tbody tr").remove();       //Clear all but header rows of the table
-            $.each(result, function(i, flight) {
-                var row = table.insertRow(-1);
-                var airlineCell = row.insertCell(0);
-                var flightNoCell = row.insertCell(1);
-                var timeCell = row.insertCell(2);
-                airlineCell.innerHTML = flight.airline;
-                flightNoCell.innerHTML = flight.flightNo;
-                timeCell.innerHTML = flight.time;
-            });
-        }
-    });*/
+            row.append(idCell)
+            	.append(shippingNumberCell)
+            	.append(shippingDateCell)
+            	.append(shippingTimeCell)
+            	.append(supplierIdCell)
+            	.append(warehousemanIdCell)
+            	.append(warehouseIdCell);
+            
+            $("#suppliesTable tbody").append(row);
+        });
+	})
+}
+
+function createSupply() {
+	var shippingNumber = document.getElementById("shippingNumberCreate").value;
+	var shippingDate = document.getElementById("shippingDateCreate").value;
+	var shippingTime = document.getElementById("shippingTimeCreate").value;
+	var supplierId = document.getElementById("supplierIdCreate").value;
+	var warehousemanId = document.getElementById("warehousemanIdCreate").value;
+	var warehouseId = document.getElementById("warehouseIdCreate").value;
+	
+	var jsonObj = { 
+			"shippingNumber":shippingNumber,
+			"shippingDate":shippingDate,
+			"shippingTime":shippingTime,
+			"supplierId":supplierId,
+			"warehousemanId":warehousemanId,
+			"warehouseId":warehouseId
+			};
+
+	$.ajax({
+	    type: 'POST',
+	    url: '/DatabaseAccessControl/services/supplies/add',
+	    data: JSON.stringify(jsonObj),
+	    success: function() {},
+	    contentType: "application/json",
+	    dataType: 'json'
+	});
+}
+
+function updateSupply() {
+	var id = document.getElementById("supplyIdUpdate").value;
+	var shippingNumber = document.getElementById("shippingNumberUpdate").value;
+	var shippingDate = document.getElementById("shippingDateUpdate").value;
+	var shippingTime = document.getElementById("shippingTimeUpdate").value;
+	var supplierId = document.getElementById("supplierIdUpdate").value;
+	var warehousemanId = document.getElementById("warehousemanIdUpdate").value;
+	var warehouseId = document.getElementById("warehouseIdUpdate").value;
+	
+	var jsonOb = { 
+			"id":id,
+			"shippingNumber":shippingNumber,
+			"shippingDate":shippingDate,
+			"shippingTime":shippingTime,
+			"supplierId":supplierId,
+			"warehousemanId":warehousemanId,
+			"warehouseId":warehouseId
+			};
+
+	$.ajax({
+	    type: 'POST',
+	    url: '/DatabaseAccessControl/services/supplies/edit',
+	    data: JSON.stringify(jsonOb),
+	    success: function() {},
+	    contentType: "application/json",
+	    dataType: 'json'
+	});
+}
+
+function deleteSupply() {
+	var supplyId = document.getElementById("supplyIdDelete").value;
+	
+	$.ajax({
+	    type: 'POST',
+	    url: '/DatabaseAccessControl/services/supplies/delete',
+	    data: JSON.stringify({"supplyId":supplyId}),
+	    success: function() {},
+	    contentType: "application/json",
+	    dataType: 'json'
+	});
 }

@@ -1,7 +1,6 @@
 package bsk_project.databaseaccesscontrol.dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -106,16 +105,16 @@ public class WarehousemanDAOImpl extends BaseDAO implements WarehousemanDAO {
 	}
 
 	@Override
-	public void updateById(int id, String pesel, String nationality, String fullName, Date employmentDate) {
-		String sql = "UPDATE Magazynierzy SET PESEL = '" + pesel + "', Narodowosc = '" + nationality +  
-			"', ImieNazwisko = '" + fullName + "', DataZatrudnienia = '" + employmentDate + "' WHERE ID = ?";
+	public void update(Warehouseman warehouseman) {
+		String sql = "UPDATE Magazynierzy SET PESEL = '" + warehouseman.getPesel() + "', Narodowosc = '" + warehouseman.getNationality() +  
+			"', ImieNazwisko = '" + warehouseman.getFullName() + "', DataZatrudnienia = '" + warehouseman.getEmploymentDate() + "' WHERE ID = ?";
         
         Connection conn = null;
         
         try {
         	conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, warehouseman.getWarehousemanId());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
@@ -127,5 +126,38 @@ public class WarehousemanDAOImpl extends BaseDAO implements WarehousemanDAO {
                 } catch (SQLException e) {}
             }
         }		
+	}
+	
+	@Override
+	public Warehouseman find(int id) {
+		String sql = "SELECT * FROM Magazynierzy WHERE ID = ?";
+        
+        Connection conn = null;
+        
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            Warehouseman result = null;
+            ResultSet rs = ps.executeQuery();
+            result = new Warehouseman(
+            		rs.getInt("ID"),
+                    rs.getString("PESEL"),
+                    rs.getString("Narodowosc"),
+                    rs.getString("ImieNazwisko"),
+                    rs.getDate("DataZatrudnienia")
+            );
+            rs.close();
+            ps.close();
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {}
+            }
+        }
 	}
 }
