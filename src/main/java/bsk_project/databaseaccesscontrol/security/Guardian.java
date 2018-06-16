@@ -31,4 +31,8 @@ public class Guardian {
 	public String getCurrentRole() {
 		return currentRole;
 	}
+	
+	public String getLogin() {
+		return login;
+	}
 }
