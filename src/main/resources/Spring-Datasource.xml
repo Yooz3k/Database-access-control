@@ -8,9 +8,9 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 
 		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
-		<property name="url" value="jdbc:sqlserver://localhost:1433;databaseName=BSK_Magazyn" />
+		<property name="url" value="jdbc:sqlserver://localhost:1433;databaseName=BSK_test1" />
 		<property name="username" value="sa" />
-		<property name="password" value="123654" />
+		<property name="password" value="123654yy" />
 	</bean>
 
 </beans>

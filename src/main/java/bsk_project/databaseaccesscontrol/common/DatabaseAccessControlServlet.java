@@ -287,7 +287,7 @@ public class DatabaseAccessControlServlet {
 		guardian = new Guardian((Guardian)request.getSession().getAttribute("guardian"));
 		if (rc.getRole(guardian.getCurrentRole()).getAccess(new Operation(CrudOperation.DELETE, Table.SUPPLIERS))) {
 			JSONObject jo = new JSONObject(json);
-			ec.getSupplierDAO().deleteById(jo.getInt("supplierID"));
+			ec.getSupplierDAO().deleteById(jo.getInt("supplierId"));
 			
 			return Response.status(Response.Status.CREATED).build();
 		} else
